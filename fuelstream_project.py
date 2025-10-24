@@ -7,4 +7,7 @@ print("Welcome to fuelstream.")
 
 session = fastf1.get_session(2021, "Silverstone", 'Q')
 session.load()
-print(session.results)
+
+
+
+
