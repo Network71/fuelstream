@@ -83,21 +83,72 @@ def drivers_comp():
     plt.show()
 
 def get_position_changes_input():
-    print()
 
-def position_changes():
+    tracks = [
+        'Albert Park Circuit',
+        'Shanghai',
+        'Suzuka',
+        'Bahrain',
+        'Jeddah',
+        'Miami',
+        'Imola',
+        'Monaco',
+        'Barcelona',
+        'Montreal',
+        'Red Bull Ring',
+        'Silverstone',
+        'Spa-Francorchamps',
+        'Hungaroring',
+        'Zandvoort',
+        'Monza',
+        'Baku',
+        'Marina Bay',
+        'Circuit of the Americas',
+        'Mexico',
+        'Sao Paulo',
+        'Las Vegas',
+        'Qatar',
+        'Yas Marina'
+    ]
 
-    #session details
-    print("Format: (Year) (Track)")
-    user_input = input("Enter session details: ")
-    session_details = user_input.split(" ")
-    session_details[0] = int(session_details[0])
+    #year input
+    year = [0]
+    ui.input(
+        label="Year",
+        placeholder='start typing',
+        on_change=lambda e: ( 
+            year.__setitem__(0, e.value)
+            ),
+        validation={'Invalid input': lambda value: len(value) < 5}
+    )
+    
+    #track input
+    selected_track = ['']
+    ui.select(
+        options=tracks,
+        with_input=True,
+        on_change=lambda e: (
+            selected_track.__setitem__(0, e.value)  # update the local variable
+        )
+    ).classes('w-40')
+    
+    #continue button
+    ui.button(
+        'Submit',
+        on_click=lambda: (
+            ui.notify(f'Processing input: {selected_track[0], year[0]}'), 
+            print(f'Local variable values: {selected_track[0], year[0]}'),
+            position_changes(int(year[0]), selected_track[0])
+        )
+    )
+
+def position_changes(year, track):
 
     #set up plot
     fastf1.plotting.setup_mpl(mpl_timedelta_support=False, color_scheme='fastf1')
 
     #load session
-    session = fastf1.get_session(session_details[0], session_details[1], 'R')
+    session = fastf1.get_session(year, track, 'R')
     session.load(telemetry=False, weather=False)
     fig, ax = plt.subplots(figsize=(8.0, 4.9))
 
@@ -222,17 +273,64 @@ def track_map(track_name):
     plt.show()
 
 def get_quali_input():
-    #year input
-    year_selected = 0
-    ui.input(placeholder='Enter year',
-             on_change=lambda e: year_selected.set_text("Input year: " + e.value),
-             validation={"Invalid input": lambda value: len(value) < 5}
-             ).on('keydown.enter')
     
-    print(year_selected)
+    tracks = [
+        'Albert Park Circuit',
+        'Shanghai',
+        'Suzuka',
+        'Bahrain',
+        'Jeddah',
+        'Miami',
+        'Imola',
+        'Monaco',
+        'Barcelona',
+        'Montreal',
+        'Red Bull Ring',
+        'Silverstone',
+        'Spa-Francorchamps',
+        'Hungaroring',
+        'Zandvoort',
+        'Monza',
+        'Baku',
+        'Marina Bay',
+        'Circuit of the Americas',
+        'Mexico',
+        'Sao Paulo',
+        'Las Vegas',
+        'Qatar',
+        'Yas Marina'
+    ]
 
+    #year input
+    year = [0]
+    ui.input(
+        label="Year",
+        placeholder='start typing',
+        on_change=lambda e: ( 
+            year.__setitem__(0, e.value)
+            ),
+        validation={'Invalid input': lambda value: len(value) < 5}
+    )
     
+    #track input
+    selected_track = ['']
+    ui.select(
+        options=tracks,
+        with_input=True,
+        on_change=lambda e: (
+            selected_track.__setitem__(0, e.value)  # update the local variable
+        )
+    ).classes('w-40')
     
+    #continue button
+    ui.button(
+        'Submit',
+        on_click=lambda: (
+            ui.notify(f'Processing input: {selected_track[0], year[0]}'), 
+            print(f'Local variable values: {selected_track[0], year[0]}'),
+            quali_results(int(year[0]), selected_track[0])
+        )
+    )
 
 def quali_results(year, track):
 
