@@ -1,14 +1,14 @@
 import fastf1
-from matplotlib import pyplot as plt
 from fastf1 import plotting
 from timple.timedelta import strftimedelta
 from fastf1.core import Laps
-from nicegui import html, ui
 
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
 
 from nicegui import ui
+from nicegui import html
 
 
 def main_menu_terminal():
@@ -85,30 +85,30 @@ def drivers_comp():
 def get_position_changes_input():
 
     tracks = [
-        'Albert Park Circuit',
-        'Shanghai',
-        'Suzuka',
-        'Bahrain',
-        'Jeddah',
-        'Miami',
-        'Imola',
-        'Monaco',
-        'Barcelona',
-        'Montreal',
-        'Red Bull Ring',
-        'Silverstone',
-        'Spa-Francorchamps',
-        'Hungaroring',
-        'Zandvoort',
-        'Monza',
-        'Baku',
-        'Marina Bay',
-        'Circuit of the Americas',
-        'Mexico',
-        'Sao Paulo',
-        'Las Vegas',
-        'Qatar',
-        'Yas Marina'
+        'Australian Grand Prix',
+        'Chinese Grand Prix',
+        'Japanese Grand Prix',
+        'Bahrain Grand Prix',
+        'Saudi Arabian Grand Prix',
+        'Miami Grand Prix',
+        'Emilia Romagna Grand Prix',
+        'Monaco Grand Prix',
+        'Spanish Grand Prix',
+        'Canadian Grand Prix',
+        'Austrian Grand Prix',
+        'British Grand Prix',
+        'Belgian Grand Prix',
+        'Hungarian Grand Prix',
+        'Dutch Grand Prix',
+        'Italian Grand Prix',
+        'Azerbaijan Grand Prix',
+        'Singapore Grand Prix',
+        'United States Grand Prix',
+        'Mexican Grand Prix',
+        'Brazilian Grand Prix',
+        'Las Vegas Grand Prix',
+        'Qatar Grand Prix',
+        'Abu Dhabi Grand Prix'
     ]
 
     #year input
@@ -171,34 +171,33 @@ def position_changes(year, track):
 
     plt.show()
 
-@ui.refreshable
 def get_track_input():
     
     tracks = [
-        'Albert Park Circuit',
-        'Shanghai',
-        'Suzuka',
-        'Bahrain',
-        'Jeddah',
-        'Miami',
-        'Imola',
-        'Monaco',
-        'Barcelona',
-        'Montreal',
-        'Red Bull Ring',
-        'Silverstone',
-        'Spa-Francorchamps',
-        'Hungaroring',
-        'Zandvoort',
-        'Monza',
-        'Baku',
-        'Marina Bay',
-        'Circuit of the Americas',
-        'Mexico',
-        'Sao Paulo',
-        'Las Vegas',
-        'Qatar',
-        'Yas Marina'
+        'Australian Grand Prix',
+        'Chinese Grand Prix',
+        'Japanese Grand Prix',
+        'Bahrain Grand Prix',
+        'Saudi Arabian Grand Prix',
+        'Miami Grand Prix',
+        'Emilia Romagna Grand Prix',
+        'Monaco Grand Prix',
+        'Spanish Grand Prix',
+        'Canadian Grand Prix',
+        'Austrian Grand Prix',
+        'British Grand Prix',
+        'Belgian Grand Prix',
+        'Hungarian Grand Prix',
+        'Dutch Grand Prix',
+        'Italian Grand Prix',
+        'Azerbaijan Grand Prix',
+        'Singapore Grand Prix',
+        'United States Grand Prix',
+        'Mexican Grand Prix',
+        'Brazilian Grand Prix',
+        'Las Vegas Grand Prix',
+        'Qatar Grand Prix',
+        'Abu Dhabi Grand Prix'
     ]
 
     selected_track = ['']
@@ -275,30 +274,30 @@ def track_map(track_name):
 def get_quali_input():
     
     tracks = [
-        'Albert Park Circuit',
-        'Shanghai',
-        'Suzuka',
-        'Bahrain',
-        'Jeddah',
-        'Miami',
-        'Imola',
-        'Monaco',
-        'Barcelona',
-        'Montreal',
-        'Red Bull Ring',
-        'Silverstone',
-        'Spa-Francorchamps',
-        'Hungaroring',
-        'Zandvoort',
-        'Monza',
-        'Baku',
-        'Marina Bay',
-        'Circuit of the Americas',
-        'Mexico',
-        'Sao Paulo',
-        'Las Vegas',
-        'Qatar',
-        'Yas Marina'
+        'Australian Grand Prix',
+        'Chinese Grand Prix',
+        'Japanese Grand Prix',
+        'Bahrain Grand Prix',
+        'Saudi Arabian Grand Prix',
+        'Miami Grand Prix',
+        'Emilia Romagna Grand Prix',
+        'Monaco Grand Prix',
+        'Spanish Grand Prix',
+        'Canadian Grand Prix',
+        'Austrian Grand Prix',
+        'British Grand Prix',
+        'Belgian Grand Prix',
+        'Hungarian Grand Prix',
+        'Dutch Grand Prix',
+        'Italian Grand Prix',
+        'Azerbaijan Grand Prix',
+        'Singapore Grand Prix',
+        'United States Grand Prix',
+        'Mexican Grand Prix',
+        'Brazilian Grand Prix',
+        'Las Vegas Grand Prix',
+        'Qatar Grand Prix',
+        'Abu Dhabi Grand Prix'
     ]
 
     #year input
