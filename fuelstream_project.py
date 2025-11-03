@@ -40,7 +40,7 @@ def main_menu_gui():
 
     ui.button('Compare drivers', on_click=lambda: get_driver_comp_input())
     ui.button('Position changes', on_click=lambda: get_position_changes_input())
-    ui.button('Track map', on_click=lambda: get_track_input())
+    ui.button('Track map', on_click=lambda: track_map())
     ui.button('Qualifying results', on_click=lambda: get_quali_input())
 
     ui.run(port=5999)
@@ -225,9 +225,9 @@ def get_track_input():
         )
     )
     
-def track_map(track_name):
+def track_map():
 
-    print(track_name)
+    track_name = get_track()
 
     #loading all session data
     session = fastf1.get_session(2021, track_name, 'Q')
@@ -371,6 +371,55 @@ def quali_results(year, track):
     lap_time_string = strftimedelta(pole_lap['LapTime'], '%m:%s.%ms')
     plt.suptitle(f"{session.event['EventName']} {session.event.year} Qualifying\n" f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})")
     plt.show()
+
+def get_track():
+    #work in progress
+    tracks = [
+        'Australian Grand Prix',
+        'Chinese Grand Prix',
+        'Japanese Grand Prix',
+        'Bahrain Grand Prix',
+        'Saudi Arabian Grand Prix',
+        'Miami Grand Prix',
+        'Emilia Romagna Grand Prix',
+        'Monaco Grand Prix',
+        'Spanish Grand Prix',
+        'Canadian Grand Prix',
+        'Austrian Grand Prix',
+        'British Grand Prix',
+        'Belgian Grand Prix',
+        'Hungarian Grand Prix',
+        'Dutch Grand Prix',
+        'Italian Grand Prix',
+        'Azerbaijan Grand Prix',
+        'Singapore Grand Prix',
+        'United States Grand Prix',
+        'Mexican Grand Prix',
+        'Brazilian Grand Prix',
+        'Las Vegas Grand Prix',
+        'Qatar Grand Prix',
+        'Abu Dhabi Grand Prix'
+    ]
+    selected_track = ['']
+    label = ui.label('')
+    #search as you type
+    ui.select(
+        options=tracks,
+        with_input=True,
+        on_change=lambda e: (
+            selected_track.__setitem__(0, e.value)  # update the local variable
+        )
+    ).classes('w-40')
+
+    #submit button
+    ui.button(
+        'Submit',
+        on_click=lambda: (
+            ui.notify(f'Processing input: {selected_track[0]}'), 
+            print(f'Local variable value: {selected_track[0]}')
+        ) 
+    )
+    
 
 main_menu_gui()
 
