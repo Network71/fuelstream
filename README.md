@@ -1,2 +1,9 @@
 # fuelstream
-this is my personal project utilising fastf1 python extension to analyse formula 1 telemtry to produce visualisations of data such as comparing lap times, qualifying results and track maps
+Personal project for visualising Formula 1 telemetry
+Visualisations include:
+- Map of tracks
+- Qualifying results
+- Fastest laps head to head between two drivers
+- Race position changes
+
+Current work in progress.
