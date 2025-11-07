@@ -12,6 +12,7 @@ from nicegui import html
 
 
 def main_menu_terminal():
+    #to discard
     print("Welcome to fuelstream.")
     print()
     print("1: Compare fastest laps of two drivers")
@@ -225,12 +226,12 @@ def get_track_input():
         )
     )
     
-def track_map():
+def track_map(track_name):
 
-    track_name = get_track()
+    #track_name = get_track()
 
     #loading all session data
-    session = fastf1.get_session(2021, track_name, 'Q')
+    session = fastf1.get_session(2024, track_name, 'Q')
     session.load()
 
     lap = session.laps.pick_fastest()
@@ -372,8 +373,8 @@ def quali_results(year, track):
     plt.suptitle(f"{session.event['EventName']} {session.event.year} Qualifying\n" f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})")
     plt.show()
 
-def get_track():
-    #work in progress
+def get_track(): #work in progress
+    
     tracks = [
         'Australian Grand Prix',
         'Chinese Grand Prix',
@@ -419,6 +420,6 @@ def get_track():
             print(f'Local variable value: {selected_track[0]}')
         ) 
     )
-    
+
 main_menu_gui()
 

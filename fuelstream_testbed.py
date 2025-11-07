@@ -1,3 +1,2 @@
-
-def functionTest():
-    print("Testing button")
+print("Welcome to fuelstream")
+#testbed for fuelstream implementations
