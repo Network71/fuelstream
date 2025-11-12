@@ -47,22 +47,118 @@ def main_menu_gui():
     ui.run(port=5999)
 
 def get_driver_comp_input():
-    print()
 
-def drivers_comp():
-    print("Format: (Year) (Track) (Session) (Driver1) (Driver2)")
-    user_input = input("Enter session details: ")
-    session_details = user_input.split(" ")
-    session_details[0] = int(session_details[0])
+    #year input
+    year = [0]
+    ui.input(
+        label="Year",
+        placeholder='start typing',
+        on_change=lambda e: ( 
+            year.__setitem__(0, e.value)
+            ),
+        validation={'Invalid input': lambda value: len(value) < 5}
+    )
+
+    tracks = [
+        'Australian Grand Prix',
+        'Chinese Grand Prix',
+        'Japanese Grand Prix',
+        'Bahrain Grand Prix',
+        'Saudi Arabian Grand Prix',
+        'Miami Grand Prix',
+        'Emilia Romagna Grand Prix',
+        'Monaco Grand Prix',
+        'Spanish Grand Prix',
+        'Canadian Grand Prix',
+        'Austrian Grand Prix',
+        'British Grand Prix',
+        'Belgian Grand Prix',
+        'Hungarian Grand Prix',
+        'Dutch Grand Prix',
+        'Italian Grand Prix',
+        'Azerbaijan Grand Prix',
+        'Singapore Grand Prix',
+        'United States Grand Prix',
+        'Mexican Grand Prix',
+        'Brazilian Grand Prix',
+        'Las Vegas Grand Prix',
+        'Qatar Grand Prix',
+        'Abu Dhabi Grand Prix'
+    ]
+
+    selected_track = ['']
+
+    #track input
+    ui.select(
+        options=tracks,
+        with_input=True,
+        on_change=lambda e: (
+            selected_track.__setitem__(0, e.value)  # update the local variable
+        )
+    ).classes('w-40')
+
+    drivers = [ 
+        "VER",
+        "TSU",
+        "PIA",
+        "NOR",
+        "LEC",
+        "HAM",
+        "ALB",
+        "SAI",
+        "ALO",
+        "STR",
+        "LAW",
+        "HAD",
+        "ANT",
+        "RUS",
+        "GAS",
+        "COL",
+        "HUL",
+        "BOR",
+        "BEA",
+        "OCO"
+    ]
+
+    selected_drivers = ['','']
+
+    #drivers input
+    ui.select(
+        options=drivers,
+        with_input=True,
+        on_change=lambda e: (
+            selected_drivers.__setitem__(0, e.value)  # update the local variable
+        )
+    ).classes('w-40')
+
+    ui.select(
+        options=drivers,
+        with_input=True,
+        on_change=lambda f: (
+            selected_drivers.__setitem__(1, f.value)  # update the local variable
+        )
+    ).classes('w-40')
+
+    #submit button
+    ui.button(
+        'Submit',
+        on_click=lambda: (
+            ui.notify(f'Processing input: {selected_track[0]}'), 
+            print(f'Local variable value: {selected_track[0]}'),
+            drivers_comp(year[0], selected_track[0], 'Q', selected_drivers[0], selected_drivers[1])
+        )
+    )
+
+def drivers_comp(year, track, session, driver1, driver2):
 
     #get session data
     fastf1.plotting.setup_mpl(mpl_timedelta_support=True, color_scheme="fastf1")
-    session = fastf1.get_session(session_details[0], session_details[1], session_details[2])
+    session = fastf1.get_session(year, track, 'Q')
     session.load()
 
     #get driver laps
-    driver1_lap = session.laps.pick_drivers(session_details[3]).pick_fastest()
-    driver2_lap = session.laps.pick_drivers(session_details[4]).pick_fastest()
+    driver1_lap = session.laps.pick_drivers(driver1).pick_fastest()
+    driver2_lap = session.laps.pick_drivers(driver2).pick_fastest()
 
     #get lap telemtry
     driver1_telemtry = driver1_lap.get_car_data().add_distance()
@@ -73,8 +169,8 @@ def drivers_comp():
     team2_color = fastf1.plotting.get_team_color(driver2_lap['Team'], session=session)
 
     fig, ax = plt.subplots()
-    ax.plot(driver1_telemtry['Distance'], driver1_telemtry['Speed'], color=team1_color, label=session_details[3])
-    ax.plot(driver2_telemtry['Distance'], driver2_telemtry['Speed'], color=team2_color, label=session_details[4])
+    ax.plot(driver1_telemtry['Distance'], driver1_telemtry['Speed'], color=team1_color, label=driver1)
+    ax.plot(driver2_telemtry['Distance'], driver2_telemtry['Speed'], color=team2_color, label=driver2)
 
     ax.set_xlabel("Distance in m")
     ax.set_ylabel("Speed in km/h")
@@ -373,8 +469,9 @@ def quali_results(year, track):
     plt.suptitle(f"{session.event['EventName']} {session.event.year} Qualifying\n" f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})")
     plt.show()
 
-def get_track(): #work in progress
-    
+#all gets work in progress
+def get_track(): 
+
     tracks = [
         'Australian Grand Prix',
         'Chinese Grand Prix',
@@ -403,6 +500,7 @@ def get_track(): #work in progress
     ]
     selected_track = ['']
     label = ui.label('')
+
     #search as you type
     ui.select(
         options=tracks,
@@ -412,14 +510,14 @@ def get_track(): #work in progress
         )
     ).classes('w-40')
 
-    #submit button
-    ui.button(
-        'Submit',
-        on_click=lambda: (
-            ui.notify(f'Processing input: {selected_track[0]}'), 
-            print(f'Local variable value: {selected_track[0]}')
-        ) 
-    )
+    print(selected_track)
+    return selected_track
+
+def get_driver():
+    print()
+
+def get_year():
+    print()
 
 main_menu_gui()
 
