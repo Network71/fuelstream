@@ -44,7 +44,7 @@ def main_menu_gui():
     ui.button('Track map', on_click=lambda: get_track_input())
     ui.button('Qualifying results', on_click=lambda: get_quali_input())
 
-    ui.run(port=5999)
+    ui.run(title='Fuelstream', port=5999)
 
 def get_driver_comp_input():
 
@@ -153,7 +153,7 @@ def drivers_comp(year, track, session, driver1, driver2):
 
     #get session data
     fastf1.plotting.setup_mpl(mpl_timedelta_support=True, color_scheme="fastf1")
-    session = fastf1.get_session(year, track, 'Q')
+    session = fastf1.get_session(int(year), track, 'Q')
     session.load()
 
     #get driver laps
@@ -165,19 +165,20 @@ def drivers_comp(year, track, session, driver1, driver2):
     driver2_telemtry = driver2_lap.get_car_data().add_distance()
 
     #plotting
-    team1_color = fastf1.plotting.get_team_color(driver1_lap['Team'], session=session)
-    team2_color = fastf1.plotting.get_team_color(driver2_lap['Team'], session=session)
+    with ui.pyplot():
+        team1_color = fastf1.plotting.get_team_color(driver1_lap['Team'], session=session)
+        team2_color = fastf1.plotting.get_team_color(driver2_lap['Team'], session=session)
 
-    fig, ax = plt.subplots()
-    ax.plot(driver1_telemtry['Distance'], driver1_telemtry['Speed'], color=team1_color, label=driver1)
-    ax.plot(driver2_telemtry['Distance'], driver2_telemtry['Speed'], color=team2_color, label=driver2)
+        fig, ax = plt.subplots()
+        ax.plot(driver1_telemtry['Distance'], driver1_telemtry['Speed'], color=team1_color, label=driver1)
+        ax.plot(driver2_telemtry['Distance'], driver2_telemtry['Speed'], color=team2_color, label=driver2)
 
-    ax.set_xlabel("Distance in m")
-    ax.set_ylabel("Speed in km/h")
+        ax.set_xlabel("Distance in m")
+        ax.set_ylabel("Speed in km/h")
 
-    ax.legend()
-    plt.suptitle("Fastest lap comparison")
-    plt.show()
+        ax.legend()
+        plt.suptitle("Fastest lap comparison")
+        #plt.show()
 
 def get_position_changes_input():
 
@@ -241,32 +242,33 @@ def get_position_changes_input():
 
 def position_changes(year, track):
 
-    #set up plot
-    fastf1.plotting.setup_mpl(mpl_timedelta_support=False, color_scheme='fastf1')
+    with ui.pyplot():
+        #set up plot
+        fastf1.plotting.setup_mpl(mpl_timedelta_support=False, color_scheme='fastf1')
 
-    #load session
-    session = fastf1.get_session(year, track, 'R')
-    session.load(telemetry=False, weather=False)
-    fig, ax = plt.subplots(figsize=(8.0, 4.9))
+        #load session
+        session = fastf1.get_session(year, track, 'R')
+        session.load(telemetry=False, weather=False)
+        fig, ax = plt.subplots(figsize=(8.0, 4.9))
 
-    #plotting
-    for drv in session.drivers:
-        drv_laps = session.laps.pick_drivers(drv)
-        if drv_laps.empty:
-            continue
-        abb = drv_laps['Driver'].iloc[0]
-        style = fastf1.plotting.get_driver_style(identifier=abb, style=['color', 'linestyle'], session=session)
-        ax.plot(drv_laps['LapNumber'], drv_laps['Position'], label=abb, **style)
-        
-    ax.set_ylim([20.5, 0.5])
-    ax.set_yticks([1,5,10,15,20])
-    ax.set_xlabel(['Lap'])
-    ax.set_ylabel(['Position'])
+        #plotting
+        for drv in session.drivers:
+            drv_laps = session.laps.pick_drivers(drv)
+            if drv_laps.empty:
+                continue
+            abb = drv_laps['Driver'].iloc[0]
+            style = fastf1.plotting.get_driver_style(identifier=abb, style=['color', 'linestyle'], session=session)
+            ax.plot(drv_laps['LapNumber'], drv_laps['Position'], label=abb, **style)
+            
+        ax.set_ylim([20.5, 0.5])
+        ax.set_yticks([1,5,10,15,20])
+        ax.set_xlabel(['Lap'])
+        ax.set_ylabel(['Position'])
 
-    ax.legend(bbox_to_anchor=(1.0,1.02))
-    plt.tight_layout()
+        ax.legend(bbox_to_anchor=(1.0,1.02))
+        plt.tight_layout()
 
-    plt.show()
+        plt.show()
 
 def get_track_input():
     
@@ -340,34 +342,36 @@ def track_map(track_name):
                             [-np.sin(angle), np.cos(angle)]])
         return np.matmul(xy, rot_mat)
 
-    #get coordinates of track map from telemtry and rotate the coors so map is oriented correctly
-    track = pos.loc[:, ('X', 'Y')].to_numpy()
-    track_angle = circuit_info.rotation / 180 * np.pi 
-    rotated_track = rotate(track, angle=track_angle)
-    plt.plot(rotated_track[:, 0], rotated_track[:, 1])
 
-    #plot corner markets
-    offset_vector = [500, 0]
-    for _, corner in circuit_info.corners.iterrows():
-        txt = f"{corner['Number']}{corner['Letter']}"
-        offset_angle = corner['Angle'] / 18 * np.pi
-        offset_x, offset_y = rotate(offset_vector, angle = track_angle)
-        text_x = corner['X'] + offset_x
-        text_y = corner['Y'] + offset_y
-        text_x, text_y = rotate([text_x, text_y], angle=track_angle)
-        track_x, track_y = rotate([corner['X'], corner['Y']], angle=track_angle)
+    with ui.pyplot():
+        #get coordinates of track map from telemtry and rotate the coors so map is oriented correctly
+        track = pos.loc[:, ('X', 'Y')].to_numpy()
+        track_angle = circuit_info.rotation / 180 * np.pi 
+        rotated_track = rotate(track, angle=track_angle)
+        plt.plot(rotated_track[:, 0], rotated_track[:, 1])
 
-        plt.scatter(text_x, text_y, color='grey', s=140)
-        plt.plot([track_x, text_x], [track_y, text_y], color='grey')
-        plt.text(text_x, text_y, txt, va='center_baseline', ha='center', size='small', color='white')
+        #plot corner markets
+        offset_vector = [500, 0]
+        for _, corner in circuit_info.corners.iterrows():
+            txt = f"{corner['Number']}{corner['Letter']}"
+            offset_angle = corner['Angle'] / 18 * np.pi
+            offset_x, offset_y = rotate(offset_vector, angle = track_angle)
+            text_x = corner['X'] + offset_x
+            text_y = corner['Y'] + offset_y
+            text_x, text_y = rotate([text_x, text_y], angle=track_angle)
+            track_x, track_y = rotate([corner['X'], corner['Y']], angle=track_angle)
 
-    #plotting
-    plt.title(session.event['Location'])
-    plt.xticks([])
-    plt.yticks([])
-    plt.axis('equal')
-    plt.show()
+            plt.scatter(text_x, text_y, color='grey', s=140)
+            plt.plot([track_x, text_x], [track_y, text_y], color='grey')
+            plt.text(text_x, text_y, txt, va='center_baseline', ha='center', size='small', color='white')
 
+        #plotting
+        plt.title(session.event['Location'])
+        plt.xticks([])
+        plt.yticks([])
+        plt.axis('equal')
+        #plt.show()
+    
 def get_quali_input():
     
     tracks = [
@@ -428,7 +432,7 @@ def get_quali_input():
         )
     )
 
-def quali_results(year, track):
+def quali_results(year, track): #needs fixing
 
     fastf1.plotting.setup_mpl(mpl_timedelta_support=True, color_scheme=None)
 
@@ -455,19 +459,20 @@ def quali_results(year, track):
         team_colors.append(color)
 
     #plotting
-    fig, ax = plt.subplots()
-    ax.barh(fastest_laps.index, fastest_laps['LapTimeDelta'], color = team_colors, edgecolor='grey')
-    ax.set_yticks(fastest_laps.index)
-    ax.set_yticklabels(fastest_laps['Driver'])
+    with ui.pyplot():
+        fig, ax = plt.subplots()
+        ax.barh(fastest_laps.index, fastest_laps['LapTimeDelta'], color = team_colors, edgecolor='grey')
+        ax.set_yticks(fastest_laps.index)
+        ax.set_yticklabels(fastest_laps['Driver'])
 
-    ax.invert_yaxis()
+        ax.invert_yaxis()
 
-    ax.set_axisbelow(True)
-    ax.xaxis.grid(True, which='major', linestyle='--', color='black', zorder=-1000)
+        ax.set_axisbelow(True)
+        ax.xaxis.grid(True, which='major', linestyle='--', color='black', zorder=-1000)
 
-    lap_time_string = strftimedelta(pole_lap['LapTime'], '%m:%s.%ms')
-    plt.suptitle(f"{session.event['EventName']} {session.event.year} Qualifying\n" f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})")
-    plt.show()
+        lap_time_string = strftimedelta(pole_lap['LapTime'], '%m:%s.%ms')
+        plt.suptitle(f"{session.event['EventName']} {session.event.year} Qualifying\n" f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})")
+        #plt.show()
 
 #all gets work in progress
 def get_track(): 
