@@ -1,5 +1,6 @@
 # fuelstream
 Personal project for visualising Formula 1 telemetry
+
 Visualisations include:
 - Map of tracks
 - Qualifying results
